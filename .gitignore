@@ -1,4 +1,5 @@
-# Docker infrastructure — local only, not for version control
+# Local-only — not for version control
+AGENTS.md
 docker-compose.yml
 docker-volume/
 
