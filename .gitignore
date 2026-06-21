@@ -1,4 +1,5 @@
-# Docker volume data — large binary/DB files, not for version control
+# Docker infrastructure — local only, not for version control
+docker-compose.yml
 docker-volume/
 
 # Python
