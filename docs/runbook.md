@@ -38,6 +38,21 @@ py -3.10 -m venv .venv
 
 ---
 
+## Activating the Virtual Environment
+
+Activate the venv once per terminal session before running any script or `pip` command:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Your prompt will change to show `(.venv)`. To deactivate, run `deactivate`.
+
+> **Execution policy error?** Run this once in an elevated PowerShell:
+> `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+
+---
+
 ## Getting a JWT Token
 
 Scripts authenticate as the **ingestion-bot** service account.
