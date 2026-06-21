@@ -1,0 +1,12 @@
+# Docker volume data — large binary/DB files, not for version control
+docker-volume/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db

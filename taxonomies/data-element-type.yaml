@@ -1,0 +1,205 @@
+# Draft custom classification taxonomy for AdventureWorks data-element content types.
+# Classification name: DataElementType
+# Intended use: auto-classification can assign these tags to column/data-element metadata
+# based on name patterns, semantic descriptions, data profiles, and value samples.
+classification:
+  name: DataElementType
+  displayName: Data Element Type
+  description: >-
+    Identifies the semantic content type represented by a data element, such as
+    an address, email address, phone number, product code, or monetary amount,
+    for the fictitious AdventureWorks business.
+  mutuallyExclusive: false
+  provider: custom
+  reviewers:
+    - Data Governance Council
+    - AdventureWorks Data Stewardship
+  owner: AdventureWorks Data Governance
+  domains:
+    - Customer
+    - Sales
+    - Product
+    - HumanResources
+    - Finance
+    - Operations
+  autoClassificationGuidance:
+    assignmentStrategy: >-
+      Prefer exact or high-confidence semantic matches from column names,
+      descriptions, constraints, and sampled values. Assign the most specific tag
+      available; use broader tags only when the subtype cannot be determined.
+    minimumConfidenceForAutoAssign: 0.80
+    minimumConfidenceForSuggestion: 0.60
+    conflictHandling: >-
+      When multiple tags match, select the tag with the strongest value-pattern
+      evidence, then the strongest column-name evidence. Allow multiple tags only
+      when the data element legitimately contains compound content.
+
+tags:
+  - name: DataElementType.Address
+    displayName: Address
+    description: Postal or physical address content, including complete addresses or address parts.
+    examples:
+      - AddressLine1
+      - BillingAddress
+      - ShipToAddress
+    namePatterns:
+      - "(?i).*address.*"
+      - "(?i).*addr.*"
+    childTags:
+      - name: DataElementType.Address.StreetAddress
+        description: Street address lines, building numbers, unit numbers, or delivery address text.
+        examples: [AddressLine1, AddressLine2, Street, StreetAddress]
+        namePatterns: ["(?i).*(addressline|street|addr_line|address_?line).*", "(?i).*(suite|unit|apt).*" ]
+      - name: DataElementType.Address.City
+        description: City, town, or locality names.
+        examples: [City, Town, Locality]
+        namePatterns: ["(?i).*(city|town|locality).*" ]
+      - name: DataElementType.Address.StateProvince
+        description: State, province, region, or territory names or codes.
+        examples: [StateProvince, State, Province, Territory]
+        namePatterns: ["(?i).*(state|province|region|territory).*" ]
+      - name: DataElementType.Address.PostalCode
+        description: Postal, ZIP, or postcode values.
+        examples: [PostalCode, ZipCode, PostCode]
+        namePatterns: ["(?i).*(postal_?code|zip_?code|postcode).*" ]
+        valuePatterns: ["^[0-9]{5}(-[0-9]{4})?$", "^[A-Z][0-9][A-Z][ -]?[0-9][A-Z][0-9]$" ]
+      - name: DataElementType.Address.Country
+        description: Country names, ISO country codes, or country-region values.
+        examples: [Country, CountryRegionCode, ISO2CountryCode]
+        namePatterns: ["(?i).*(country|countryregion|iso2|iso3).*" ]
+
+  - name: DataElementType.Email
+    displayName: Email
+    description: Email address values for customers, employees, vendors, or contacts.
+    examples: [EmailAddress, Email, ContactEmail]
+    namePatterns: ["(?i).*(email|e_mail|mailaddress).*" ]
+    valuePatterns: ["^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" ]
+
+  - name: DataElementType.PhoneNumber
+    displayName: Phone Number
+    description: Telephone or fax numbers, including mobile, work, home, and business phone values.
+    examples: [Phone, PhoneNumber, MobilePhone, FaxNumber]
+    namePatterns: ["(?i).*(phone|telephone|mobile|cell|fax).*" ]
+    valuePatterns: ["^\\+?[0-9 .()/-]{7,}$" ]
+    childTags:
+      - name: DataElementType.PhoneNumber.Mobile
+        description: Mobile or cellular phone numbers.
+        examples: [MobilePhone, CellPhone]
+        namePatterns: ["(?i).*(mobile|cell).*phone.*" ]
+      - name: DataElementType.PhoneNumber.Fax
+        description: Fax numbers.
+        examples: [Fax, FaxNumber]
+        namePatterns: ["(?i).*fax.*" ]
+
+  - name: DataElementType.PersonName
+    displayName: Person Name
+    description: Names or parts of names for customers, employees, sales representatives, or contacts.
+    examples: [FirstName, LastName, MiddleName, FullName]
+    namePatterns: ["(?i).*(first_?name|last_?name|middle_?name|full_?name|person_?name).*" ]
+    childTags:
+      - name: DataElementType.PersonName.GivenName
+        description: Given, first, or preferred names.
+        examples: [FirstName, GivenName]
+        namePatterns: ["(?i).*(first_?name|given_?name|preferred_?name).*" ]
+      - name: DataElementType.PersonName.FamilyName
+        description: Family, surname, or last names.
+        examples: [LastName, Surname, FamilyName]
+        namePatterns: ["(?i).*(last_?name|surname|family_?name).*" ]
+
+  - name: DataElementType.OrganizationName
+    displayName: Organization Name
+    description: Company, vendor, store, department, or organizational unit names.
+    examples: [CompanyName, VendorName, StoreName, DepartmentName]
+    namePatterns: ["(?i).*(company|vendor|store|department|organization|org).*name.*" ]
+
+  - name: DataElementType.Identifier
+    displayName: Identifier
+    description: Keys, IDs, numbers, or codes that identify business entities or records.
+    examples: [CustomerID, SalesOrderID, ProductNumber, AccountNumber]
+    namePatterns: ["(?i).*(^id$|_id$|id$|number$|code$|key$).*" ]
+    childTags:
+      - name: DataElementType.Identifier.Customer
+        description: Customer identifiers or account numbers.
+        examples: [CustomerID, CustomerAccountNumber, AccountNumber]
+        namePatterns: ["(?i).*(customer).*(_?id|number|code|key).*", "(?i).*account_?number.*" ]
+      - name: DataElementType.Identifier.Product
+        description: Product, SKU, model, or part identifiers.
+        examples: [ProductID, ProductNumber, SKU, ModelName]
+        namePatterns: ["(?i).*(product|sku|model|part).*(_?id|number|code|key|name).*" ]
+      - name: DataElementType.Identifier.SalesOrder
+        description: Sales order, purchase order, quote, or invoice identifiers.
+        examples: [SalesOrderID, SalesOrderNumber, PurchaseOrderNumber, InvoiceNumber]
+        namePatterns: ["(?i).*(sales_?order|purchase_?order|invoice|quote).*(_?id|number|code|key).*" ]
+      - name: DataElementType.Identifier.Employee
+        description: Employee, salesperson, or staff identifiers.
+        examples: [EmployeeID, SalesPersonID, NationalIDNumber]
+        namePatterns: ["(?i).*(employee|sales_?person|staff|national).*(_?id|number|code|key).*" ]
+
+  - name: DataElementType.DateTime
+    displayName: Date or Time
+    description: Dates, timestamps, times, and calendar-related values.
+    examples: [OrderDate, DueDate, ModifiedDate, BirthDate]
+    namePatterns: ["(?i).*(date|time|timestamp|datetime).*" ]
+    childTags:
+      - name: DataElementType.DateTime.BirthDate
+        description: Date of birth values.
+        examples: [BirthDate, DateOfBirth, DOB]
+        namePatterns: ["(?i).*(birth_?date|date_?of_?birth|dob).*" ]
+      - name: DataElementType.DateTime.TransactionDate
+        description: Business transaction dates such as order, ship, due, or payment dates.
+        examples: [OrderDate, ShipDate, DueDate, PaymentDate]
+        namePatterns: ["(?i).*(order|ship|due|payment|transaction).*date.*" ]
+      - name: DataElementType.DateTime.AuditTimestamp
+        description: Create, update, modified, or audit timestamps.
+        examples: [CreatedDate, ModifiedDate, UpdatedAt]
+        namePatterns: ["(?i).*(created|modified|updated|audit).*(_?date|_?time|timestamp|at).*" ]
+
+  - name: DataElementType.Money
+    displayName: Money
+    description: Monetary values such as prices, costs, discounts, taxes, subtotals, or totals.
+    examples: [ListPrice, StandardCost, UnitPrice, TaxAmt, Freight, TotalDue]
+    namePatterns: ["(?i).*(price|cost|amount|amt|tax|freight|subtotal|total|discount|commission).*" ]
+
+  - name: DataElementType.Quantity
+    displayName: Quantity
+    description: Counts, inventory quantities, ordered quantities, or stock levels.
+    examples: [OrderQty, Quantity, SafetyStockLevel, ReorderPoint]
+    namePatterns: ["(?i).*(qty|quantity|count|stock|inventory|reorder).*" ]
+
+  - name: DataElementType.Measurement
+    displayName: Measurement
+    description: Physical measurements for products or shipments, including weight, size, and dimensions.
+    examples: [Weight, Size, Length, Height, Width]
+    namePatterns: ["(?i).*(weight|size|length|height|width|dimension).*" ]
+
+  - name: DataElementType.Geography
+    displayName: Geography
+    description: Spatial, latitude, longitude, territory, or location hierarchy values.
+    examples: [SpatialLocation, Latitude, Longitude, TerritoryID]
+    namePatterns: ["(?i).*(geography|spatial|latitude|longitude|territory|location).*" ]
+
+  - name: DataElementType.WebUrl
+    displayName: Web URL
+    description: Web links, profile URLs, document links, or endpoint locations.
+    examples: [WebsiteUrl, ProfileUrl, CatalogUrl]
+    namePatterns: ["(?i).*(url|uri|website|web_?site|link).*" ]
+    valuePatterns: ["^https?://.+" ]
+
+  - name: DataElementType.BooleanFlag
+    displayName: Boolean Flag
+    description: True/false indicators or status flags.
+    examples: [IsActive, MakeFlag, FinishedGoodsFlag, IsDeleted]
+    namePatterns: ["(?i).*(^is[A-Z_].*|_flag$|flag$|indicator$|enabled|active|deleted).*" ]
+    valuePatterns: ["^(?i:true|false|0|1|yes|no|y|n)$" ]
+
+  - name: DataElementType.Status
+    displayName: Status
+    description: Lifecycle, order, workflow, or operational status values.
+    examples: [Status, OrderStatus, MaritalStatus, InventoryStatus]
+    namePatterns: ["(?i).*(status|state|stage|lifecycle).*" ]
+
+  - name: DataElementType.FreeText
+    displayName: Free Text
+    description: Human-entered comments, notes, descriptions, or narrative text.
+    examples: [Description, Comment, Notes, SpecialInstructions]
+    namePatterns: ["(?i).*(description|comment|note|instruction|remark|text).*" ]
