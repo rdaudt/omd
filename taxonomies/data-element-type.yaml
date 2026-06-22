@@ -45,28 +45,40 @@ tags:
     namePatterns:
       - "(?i).*address.*"
       - "(?i).*addr.*"
+    autoClassificationEnabled: true
+    autoClassificationPriority: 50
     childTags:
       - name: DataElementType.Address.StreetAddress
         description: Street address lines, building numbers, unit numbers, or delivery address text.
         examples: [AddressLine1, AddressLine2, Street, StreetAddress]
         namePatterns: ["(?i).*(addressline|street|addr_line|address_?line).*", "(?i).*(suite|unit|apt).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
       - name: DataElementType.Address.City
         description: City, town, or locality names.
         examples: [City, Town, Locality]
         namePatterns: ["(?i).*(city|town|locality).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
       - name: DataElementType.Address.StateProvince
         description: State, province, region, or territory names or codes.
         examples: [StateProvince, State, Province, Territory]
         namePatterns: ["(?i).*(state|province|region|territory).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
       - name: DataElementType.Address.PostalCode
         description: Postal, ZIP, or postcode values.
         examples: [PostalCode, ZipCode, PostCode]
         namePatterns: ["(?i).*(postal_?code|zip_?code|postcode).*" ]
         valuePatterns: ["^[0-9]{5}(-[0-9]{4})?$", "^[A-Z][0-9][A-Z][ -]?[0-9][A-Z][0-9]$" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
       - name: DataElementType.Address.Country
         description: Country names, ISO country codes, or country-region values.
         examples: [Country, CountryRegionCode, ISO2CountryCode]
         namePatterns: ["(?i).*(country|countryregion|iso2|iso3).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
 
   - name: DataElementType.Email
     displayName: Email
@@ -74,6 +86,9 @@ tags:
     examples: [EmailAddress, Email, ContactEmail]
     namePatterns: ["(?i).*(email|e_mail|mailaddress).*" ]
     valuePatterns: ["^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 85
+    predefinedRecognizers: [EmailRecognizer]
 
   - name: DataElementType.PhoneNumber
     displayName: Phone Number
@@ -81,102 +96,149 @@ tags:
     examples: [Phone, PhoneNumber, MobilePhone, FaxNumber]
     namePatterns: ["(?i).*(phone|telephone|mobile|cell|fax).*" ]
     valuePatterns: ["^\\+?[0-9 .()/-]{7,}$" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 80
+    predefinedRecognizers: [PhoneRecognizer]
     childTags:
       - name: DataElementType.PhoneNumber.Mobile
         description: Mobile or cellular phone numbers.
         examples: [MobilePhone, CellPhone]
         namePatterns: ["(?i).*(mobile|cell).*phone.*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 85
+        predefinedRecognizers: [PhoneRecognizer]
       - name: DataElementType.PhoneNumber.Fax
         description: Fax numbers.
         examples: [Fax, FaxNumber]
         namePatterns: ["(?i).*fax.*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 85
+        predefinedRecognizers: [PhoneRecognizer]
 
   - name: DataElementType.PersonName
     displayName: Person Name
     description: Names or parts of names for customers, employees, sales representatives, or contacts.
     examples: [FirstName, LastName, MiddleName, FullName]
     namePatterns: ["(?i).*(first_?name|last_?name|middle_?name|full_?name|person_?name).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 65
     childTags:
       - name: DataElementType.PersonName.GivenName
         description: Given, first, or preferred names.
         examples: [FirstName, GivenName]
         namePatterns: ["(?i).*(first_?name|given_?name|preferred_?name).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 75
       - name: DataElementType.PersonName.FamilyName
         description: Family, surname, or last names.
         examples: [LastName, Surname, FamilyName]
         namePatterns: ["(?i).*(last_?name|surname|family_?name).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 75
 
   - name: DataElementType.OrganizationName
     displayName: Organization Name
     description: Company, vendor, store, department, or organizational unit names.
     examples: [CompanyName, VendorName, StoreName, DepartmentName]
     namePatterns: ["(?i).*(company|vendor|store|department|organization|org).*name.*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 60
 
   - name: DataElementType.Identifier
     displayName: Identifier
     description: Keys, IDs, numbers, or codes that identify business entities or records.
     examples: [CustomerID, SalesOrderID, ProductNumber, AccountNumber]
     namePatterns: ["(?i).*(^id$|_id$|id$|number$|code$|key$).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 45
     childTags:
       - name: DataElementType.Identifier.Customer
         description: Customer identifiers or account numbers.
         examples: [CustomerID, CustomerAccountNumber, AccountNumber]
         namePatterns: ["(?i).*(customer).*(_?id|number|code|key).*", "(?i).*account_?number.*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 55
       - name: DataElementType.Identifier.Product
         description: Product, SKU, model, or part identifiers.
         examples: [ProductID, ProductNumber, SKU, ModelName]
         namePatterns: ["(?i).*(product|sku|model|part).*(_?id|number|code|key|name).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 55
       - name: DataElementType.Identifier.SalesOrder
         description: Sales order, purchase order, quote, or invoice identifiers.
         examples: [SalesOrderID, SalesOrderNumber, PurchaseOrderNumber, InvoiceNumber]
         namePatterns: ["(?i).*(sales_?order|purchase_?order|invoice|quote).*(_?id|number|code|key).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 55
       - name: DataElementType.Identifier.Employee
         description: Employee, salesperson, or staff identifiers.
         examples: [EmployeeID, SalesPersonID, NationalIDNumber]
         namePatterns: ["(?i).*(employee|sales_?person|staff|national).*(_?id|number|code|key).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 55
 
   - name: DataElementType.DateTime
     displayName: Date or Time
     description: Dates, timestamps, times, and calendar-related values.
     examples: [OrderDate, DueDate, ModifiedDate, BirthDate]
     namePatterns: ["(?i).*(date|time|timestamp|datetime).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 55
+    predefinedRecognizers: [DateRecognizer]
     childTags:
       - name: DataElementType.DateTime.BirthDate
         description: Date of birth values.
         examples: [BirthDate, DateOfBirth, DOB]
         namePatterns: ["(?i).*(birth_?date|date_?of_?birth|dob).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 70
+        predefinedRecognizers: [DateRecognizer]
       - name: DataElementType.DateTime.TransactionDate
         description: Business transaction dates such as order, ship, due, or payment dates.
         examples: [OrderDate, ShipDate, DueDate, PaymentDate]
         namePatterns: ["(?i).*(order|ship|due|payment|transaction).*date.*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 65
+        predefinedRecognizers: [DateRecognizer]
       - name: DataElementType.DateTime.AuditTimestamp
         description: Create, update, modified, or audit timestamps.
         examples: [CreatedDate, ModifiedDate, UpdatedAt]
         namePatterns: ["(?i).*(created|modified|updated|audit).*(_?date|_?time|timestamp|at).*" ]
+        autoClassificationEnabled: true
+        autoClassificationPriority: 60
+        predefinedRecognizers: [DateRecognizer]
 
   - name: DataElementType.Money
     displayName: Money
     description: Monetary values such as prices, costs, discounts, taxes, subtotals, or totals.
     examples: [ListPrice, StandardCost, UnitPrice, TaxAmt, Freight, TotalDue]
     namePatterns: ["(?i).*(price|cost|amount|amt|tax|freight|subtotal|total|discount|commission).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 70
 
   - name: DataElementType.Quantity
     displayName: Quantity
     description: Counts, inventory quantities, ordered quantities, or stock levels.
     examples: [OrderQty, Quantity, SafetyStockLevel, ReorderPoint]
     namePatterns: ["(?i).*(qty|quantity|count|stock|inventory|reorder).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 65
 
   - name: DataElementType.Measurement
     displayName: Measurement
     description: Physical measurements for products or shipments, including weight, size, and dimensions.
     examples: [Weight, Size, Length, Height, Width]
     namePatterns: ["(?i).*(weight|size|length|height|width|dimension).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 60
 
   - name: DataElementType.Geography
     displayName: Geography
     description: Spatial, latitude, longitude, territory, or location hierarchy values.
     examples: [SpatialLocation, Latitude, Longitude, TerritoryID]
     namePatterns: ["(?i).*(geography|spatial|latitude|longitude|territory|location).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 60
 
   - name: DataElementType.WebUrl
     displayName: Web URL
@@ -184,6 +246,9 @@ tags:
     examples: [WebsiteUrl, ProfileUrl, CatalogUrl]
     namePatterns: ["(?i).*(url|uri|website|web_?site|link).*" ]
     valuePatterns: ["^https?://.+" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 80
+    predefinedRecognizers: [UrlRecognizer]
 
   - name: DataElementType.BooleanFlag
     displayName: Boolean Flag
@@ -191,15 +256,21 @@ tags:
     examples: [IsActive, MakeFlag, FinishedGoodsFlag, IsDeleted]
     namePatterns: ["(?i).*(^is[A-Z_].*|_flag$|flag$|indicator$|enabled|active|deleted).*" ]
     valuePatterns: ["^(?i:true|false|0|1|yes|no|y|n)$" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 55
 
   - name: DataElementType.Status
     displayName: Status
     description: Lifecycle, order, workflow, or operational status values.
     examples: [Status, OrderStatus, MaritalStatus, InventoryStatus]
     namePatterns: ["(?i).*(status|state|stage|lifecycle).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 50
 
   - name: DataElementType.FreeText
     displayName: Free Text
     description: Human-entered comments, notes, descriptions, or narrative text.
     examples: [Description, Comment, Notes, SpecialInstructions]
     namePatterns: ["(?i).*(description|comment|note|instruction|remark|text).*" ]
+    autoClassificationEnabled: true
+    autoClassificationPriority: 40

@@ -107,6 +107,81 @@ in the OMD UI if needed.
 
 ---
 
+## Running Auto-Classification
+
+After tags have been upserted with recognizer configs, run the AutoClassification workflow.
+
+> **Before first run**: verify `serviceName` in `workflows\adventureworks-autoclassify.yaml`
+> matches exactly what appears in OMD under **Settings → Services**. Edit the file if needed.
+
+```powershell
+$env:OMD_HOST      = "http://localhost:8585/api"
+$env:OMD_JWT_TOKEN = "<token>"
+
+# Step 1 — upsert tags with recognizer configs (safe to re-run anytime)
+.venv\Scripts\python scripts\create_custom_classification.py
+
+# Step 2 — run the classification workflow
+.venv\Scripts\metadata.exe classify -c workflows\adventureworks-autoclassify.yaml
+```
+
+After the workflow completes, check results in the OMD UI by navigating to an
+AdventureWorks table (e.g. `Person.Person`) and confirming `DataElementType.*`
+tags appear on columns like `EmailAddress`, `FirstName`, `LastName`, `Phone`.
+
+### Verifying recognizer config via API
+
+The OMD UI does not expose `autoClassificationEnabled` or `recognizers` on tag
+detail pages. Use the REST API to confirm they were written correctly:
+
+```powershell
+curl -s `
+  -H "Authorization: Bearer $env:OMD_JWT_TOKEN" `
+  "http://localhost:8585/api/v1/tags/name/DataElementType.Email?fields=recognizers,autoClassificationEnabled,autoClassificationPriority" `
+  | python -m json.tool
+```
+
+Expected: `"autoClassificationEnabled": true` and a non-empty `"recognizers"` array.
+
+### Promoting to prod
+
+```powershell
+$env:OMD_HOST      = "https://your-prod-omd.example.com/api"
+$env:OMD_JWT_TOKEN = "<prod-token>"
+.venv\Scripts\python scripts\create_custom_classification.py
+.venv\Scripts\metadata.exe classify -c workflows\adventureworks-autoclassify.yaml
+```
+
+---
+
+## Applying DataElementType Tags
+
+Applies `DataElementType.*` tags to columns by matching column names against the patterns
+defined in `taxonomies\data-element-type.yaml`. Columns that already carry any
+`DataElementType.*` tag are skipped (safe to re-run).
+
+```powershell
+$env:OMD_HOST      = "http://localhost:8585/api"
+$env:OMD_JWT_TOKEN = "<token>"
+
+# Dry run first — see what would be tagged without writing
+.venv\Scripts\python scripts\apply_data_element_tags.py `
+  --service "Desktop DB" `
+  --database "AdventureWorks2019" `
+  --schema-include "^Person$" "^HumanResources$" `
+  --dry-run
+
+# Apply for real
+.venv\Scripts\python scripts\apply_data_element_tags.py `
+  --service "Desktop DB" `
+  --database "AdventureWorks2019" `
+  --schema-include "^Person$" "^HumanResources$"
+```
+
+**To promote to prod:** set `$env:OMD_HOST` and `$env:OMD_JWT_TOKEN` to prod values and re-run.
+
+---
+
 ## Troubleshooting
 
 | Symptom | Likely cause | Fix |
@@ -116,3 +191,4 @@ in the OMD UI if needed.
 | `401 Unauthorized` | Token expired or wrong | Refresh the token from the OMD UI |
 | `WinError 32` during pip install | VS Code Python extension locking venv files | Close VS Code, delete `.venv`, reinstall |
 | OMD UI not reachable | Docker containers not running | `docker compose up -d` and wait ~60s |
+| `patch() raises validation error` | Column tag payload rejected | Check TagLabel fields: `tagFQN`, `labelType`, `state`, `source` are all set |

@@ -1,0 +1,40 @@
+# AutoClassification workflow for the AdventureWorks SQL Server service.
+#
+# Prerequisites:
+#   1. Metadata ingestion for the service must have run at least once so that
+#      tables and columns exist in OpenMetadata.
+#   2. Tags must be upserted with recognizer configs:
+#        .venv\Scripts\python scripts\create_custom_classification.py
+#   3. Environment variables must be set (see runbook.md).
+#
+# Run (venv must be active, or use the full path):
+#   .venv\Scripts\metadata.exe classify -c workflows\adventureworks-autoclassify.yaml
+#
+# serviceName must match exactly what was used during metadata ingestion.
+# Verify in the OMD UI under Settings → Services before running.
+
+source:
+  type: AutoClassification
+  serviceName: Desktop DB
+  sourceConfig:
+    config:
+      type: AutoClassification
+      enableAutoClassification: true
+      storeSampleData: true
+      sampleDataCount: 50
+      confidence: 80
+
+processor:
+  type: orm-profiler
+  config: {}
+
+sink:
+  type: metadata-rest
+  config: {}
+
+workflowConfig:
+  openMetadataServerConfig:
+    hostPort: "${OMD_HOST}"
+    authProvider: openmetadata
+    securityConfig:
+      jwtToken: "${OMD_JWT_TOKEN}"
