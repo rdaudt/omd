@@ -1,0 +1,23 @@
+testSuite: workplacesafety_critical_dq
+
+tests:
+  - name: claims_claim_id_not_null
+    tableFQN: prod.claims.claim_header
+    column: claim_id
+    testDefinition: columnValuesToBeNotNull
+    parameters: []
+
+  - name: claims_claim_id_unique
+    tableFQN: prod.claims.claim_header
+    column: claim_id
+    testDefinition: columnValuesToBeUnique
+    parameters: []
+
+  - name: claim_header_row_count_between
+    tableFQN: prod.claims.claim_header
+    testDefinition: tableRowCountToBeBetween
+    parameters:
+      - name: minValue
+        value: "1000"
+      - name: maxValue
+        value: "10000000"

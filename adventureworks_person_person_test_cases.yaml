@@ -1,0 +1,43 @@
+testSuite: adventureworks_person_dq
+
+tests:
+  - name: person_person_business_entity_id_not_null
+    tableFQN: Desktop DB.AdventureWorks2019.Person.Person
+    column: BusinessEntityID
+    testDefinition: columnValuesToBeNotNull
+    parameters: []
+    description: BusinessEntityID should be populated for every Person.Person row.
+
+  - name: person_person_business_entity_id_unique
+    tableFQN: Desktop DB.AdventureWorks2019.Person.Person
+    column: BusinessEntityID
+    testDefinition: columnValuesToBeUnique
+    parameters: []
+    description: BusinessEntityID should uniquely identify each Person.Person row.
+
+  - name: person_person_person_type_allowed_values
+    tableFQN: Desktop DB.AdventureWorks2019.Person.Person
+    column: PersonType
+    testDefinition: columnValuesToBeInSet
+    parameters:
+      - name: allowedValues
+        value: '["SC", "VC", "IN", "EM", "SP", "GC"]'
+    description: PersonType should only contain documented AdventureWorks person type codes.
+
+  - name: person_person_email_promotion_between_0_and_2
+    tableFQN: Desktop DB.AdventureWorks2019.Person.Person
+    column: EmailPromotion
+    testDefinition: columnValuesToBeBetween
+    parameters:
+      - name: minValue
+        value: "0"
+      - name: maxValue
+        value: "2"
+    description: EmailPromotion should remain within the AdventureWorks domain of 0 through 2.
+
+  - name: person_person_modified_date_not_null
+    tableFQN: Desktop DB.AdventureWorks2019.Person.Person
+    column: ModifiedDate
+    testDefinition: columnValuesToBeNotNull
+    parameters: []
+    description: ModifiedDate should be populated for every Person.Person row.

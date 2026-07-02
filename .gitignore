@@ -2,6 +2,7 @@
 AGENTS.md
 docker-compose.yml
 docker-volume/
+.serena/
 
 # Python
 __pycache__/
